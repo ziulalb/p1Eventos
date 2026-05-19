@@ -101,20 +101,89 @@ O banco de dados é estruturado em tabelas normalizadas com forte integridade re
 4. **Certificação:** Uma `InscricaoSubEvento` confirmada com `status_presenca = TRUE` dispara a emissão de `1` `Certificado` contendo um `hash_autenticidade` para verificação externa.
 
 
-Veja o [Diagrama de Entidade-Relacionamento (DER) do Projeto](DER.md).
-```</div>
+## 📊 Diagrama de Entidade-Relacionamento (DER)
 
-</body>
-</html>
-"""
+```mermaid
+erDiagram
+    CURSOS ||--o{ USUARIOS : "possui"
+    CURSOS ||--o{ LOCAIS : "vincula"
+    USUARIOS ||--o{ EVENTOS : "organiza"
+    EVENTOS ||--o{ SUBEVENTOS : "compoe"
+    LOCAIS ||--o{ SUBEVENTOS : "sedia"
 
-# Write to file
-with open("guia_der_github.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
+    USUARIOS ||--o{ INSCRICOES_EVENTO : "realiza"
+    EVENTOS ||--o{ INSCRICOES_EVENTO : "recebe"
 
-# Convert to PDF
-HTML("guia_der_github.html").write_pdf("guia_der_github.pdf")
-print("PDF generated successfully.")
+    USUARIOS ||--o{ INSCRICOES_SUBEVENTO : "participa"
+    SUBEVENTOS ||--o{ INSCRICOES_SUBEVENTO : "aloca"
+
+    INSCRICOES_SUBEVENTO ||--o| CERTIFICADOS : "gera"
+
+    CURSOS {
+        int id PK
+        string nomeCurso
+        string departamento
+    }
+
+    USUARIOS {
+        int id PK
+        string matricula UK
+        string nome
+        string emailInstitucional
+        string telefone
+        enum tipoUsuario
+        int id_curso FK
+    }
+
+    LOCAIS {
+        int id PK
+        string nomeSala
+        string bloco
+        int capacidadeReal
+        int id_curso FK
+    }
+
+    EVENTOS {
+        int id PK
+        string titulo
+        text resumo
+        datetime dataInicio
+        datetime dataFim
+        int capacidadeMaxima
+        int id_organizador FK
+    }
+
+    SUBEVENTOS {
+        int id PK
+        string titulo
+        text resumo
+        datetime dataInicio
+        datetime dataFim
+        decimal valor
+        int capacidadeMaxima
+        int id_evento FK
+        int id_local FK
+    }
+
+    INSCRICOES_EVENTO {
+        int id_usuario FK
+        int id_evento FK
+    }
+
+    INSCRICOES_SUBEVENTO {
+        int id_usuario FK
+        int id_subevento FK
+    }
+
+    CERTIFICADOS {
+        int id PK
+        int id_usuario FK
+        int id_subevento FK
+        int cargaHoraria
+        string hashAutenticidade UK
+        datetime dataEmissao
+    }
+```
 
 ---
 
@@ -194,3 +263,4 @@ classDiagram
     InscricaoSubEvento "n" --> "1" Subevento : refere-se a
 
     Certificado "1" -- "1" InscricaoSubEvento : gera
+```
