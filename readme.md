@@ -35,24 +35,29 @@ O **IFS Eventos** é uma plataforma centralizada para a gestão, divulgação e 
 
 O banco de dados é estruturado em tabelas normalizadas com forte integridade referencial. Abaixo encontram-se as especificações das entidades do sistema:
 
-### 1. `Usuarios` (Sincronizado institucionalmente)
-* `id_usuario` (PK): `UUID` ou `Integer`
+### 1. `Cursos`
+* `id` (PK): `Integer`
+* `nome_curso`: `String`
+* `departamento`: `String`
+
+### 2. `Usuarios`
+* `id` (PK): `Integer`
 * `matricula` (Unique): `String`
 * `nome`: `String`
 * `email_institucional`: `String`
 * `telefone`: `String`
-* `tipo_usuario`: `Enum ('Discente', 'Docente', 'Admin')`
-* `id_curso` / `id_departamento` (FK): Referencia `Cursos`
+* `tipo_usuario`: `Enum ('DISCENTE', 'DOCENTE', 'ADMIN')`
+* `id_curso` (FK): Referencia `Cursos`
 
-### 2. `Locais`
-* `id_local` (PK): `UUID` ou `Integer`
+### 3. `Locais`
+* `id` (PK): `Integer`
 * `nome_sala`: `String`
 * `bloco`: `String`
 * `capacidade_real`: `Integer`
-* `id_curso` / `id_departamento` (FK): Referencia `Cursos`
+* `id_curso` (FK): Referencia `Cursos`
 
-### 3. `Eventos`
-* `id_evento` (PK): `UUID` ou `Integer`
+### 4. `Eventos`
+* `id` (PK): `Integer`
 * `titulo`: `String`
 * `resumo`: `Text`
 * `data_inicio`: `Datetime`
@@ -60,36 +65,32 @@ O banco de dados é estruturado em tabelas normalizadas com forte integridade re
 * `capacidade_maxima`: `Integer`
 * `id_organizador` (FK): Referencia `Usuarios`
 
-### 4. `Subeventos`
-* `id_subevento` (PK): `UUID` ou `Integer`
+### 5. `Subeventos`
+* `id` (PK): `Integer`
 * `titulo`: `String`
 * `resumo`: `Text`
 * `data_inicio`: `Datetime`
 * `data_fim`: `Datetime`
-* `local`: `String`
 * `valor`: `Decimal (10,2)` (0.00 se gratuito)
 * `capacidade_maxima`: `Integer`
 * `id_evento` (FK): Referencia `Eventos`
+* `id_local` (FK): Referencia `Locais`
 
-### 5. `InscricoesEvento` (Relação N:M)
-* `id_inscricaoE` (PK): `UUID`
+### 6. `inscricoes_evento` (Tabela de Junção N:M)
 * `id_usuario` (FK): Referencia `Usuarios`
 * `id_evento` (FK): Referencia `Eventos`
-* `data_inscricao`: `Timestamp` (Default: `NOW`)
 
-### 6. `InscricoesSubEvento` (Relação N:M)
-* `id_inscricaoSE` (PK): `UUID`
+### 7. `inscricoes_subevento` (Tabela de Junção N:M)
 * `id_usuario` (FK): Referencia `Usuarios`
 * `id_subevento` (FK): Referencia `Subeventos`
-* `data_inscricao`: `Timestamp` (Default: `NOW`)
-* `status_presenca`: `Boolean` (Default: `FALSE`)
 
-### 7. `Certificados` (Pós-Evento)
-* `id_participacao` (PK): `UUID`
-* `id_inscricaoSE` (FK): Referencia `InscricoesSubEvento`
+### 8. `Certificados`
+* `id` (PK): `Integer`
+* `id_usuario` (FK): Referencia `Usuarios`
+* `id_subevento` (FK): Referencia `Subeventos`
 * `carga_horaria`: `Integer`
 * `hash_autenticidade` (Unique): `String`
-* `data_emissao`: `Timestamp` (Default: `NOW`)
+* `data_emissao`: `Datetime`
 
 ---
 
