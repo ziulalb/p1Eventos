@@ -100,7 +100,24 @@ O banco de dados é estruturado em tabelas normalizadas com forte integridade re
 3. **Muitos-para-Muitos (N:M):** As tabelas `InscricoesEvento` e `InscricoesSubEvento` resolvem as associações de usuários com as agendas desejadas.
 4. **Certificação:** Uma `InscricaoSubEvento` confirmada com `status_presenca = TRUE` dispara a emissão de `1` `Certificado` contendo um `hash_autenticidade` para verificação externa.
 
+
+Veja o [Diagrama de Entidade-Relacionamento (DER) do Projeto](DER.md).
+```</div>
+
+</body>
+</html>
+"""
+
+# Write to file
+with open("guia_der_github.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+# Convert to PDF
+HTML("guia_der_github.html").write_pdf("guia_der_github.pdf")
+print("PDF generated successfully.")
+
 ---
+
 
 ## 📐 Diagrama de Classes UML (Mermaid)
 
