@@ -121,7 +121,7 @@ print("PDF generated successfully.")
 
 ## 📐 Diagrama de Classes UML (Mermaid)
 
-O diagrama abaixo descreve a estrutura de classes do domínio e suas respectivas relações. O GitHub renderizará este gráfico nativamente:
+O diagrama abaixo descreve a estrutura de classes do domínio e suas respectivas relações.
 
 ```mermaid
 classDiagram
