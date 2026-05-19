@@ -1,9 +1,9 @@
 # Diagrama de Entidade-Relacionamento (DER)
 
 **Projeto:** Gestor de Eventos Acadêmicos (IFS Eventos)  
-**Autores:** Luiz Eduardo da Silva Albuquerque e Lorena Vieira Ribeiro  
+**Autores:** Lorena Vieira Ribeiro e Luiz Eduardo da Silva Albuquerque
 
-Este arquivo contém a modelagem lógica do banco de dados do sistema **IFS Eventos**, utilizando a especificação nativa Mermaid do GitHub para renderização gráfica automatizada.
+Este arquivo contém a modelagem lógica do banco de dados do sistema **IFS Eventos**.
 
 ```mermaid
 erDiagram
