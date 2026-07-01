@@ -1,4 +1,4 @@
-package com.example.P1Eventos.dto;
+package com.example.P1Eventos.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
