@@ -273,3 +273,14 @@ classDiagram
    ```bash
    git clone [https://github.com/seu-usuario/p1Eventos.git](https://github.com/seu-usuario/p1Eventos.git)
    cd p1Eventos
+
+---
+## 📋 Exemplos de Execução da API
+
+### 1. Autenticação (POST `/api/auth/login`)
+**Payload de Requisição:**
+```json
+{
+  "matricula": "ADM001",
+  "senha": "123"
+}
