@@ -1,7 +1,7 @@
 # IFS Eventos - Gestor de Eventos Acadêmicos
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-blue?style=for-the-badge" alt="Status">
+  <img src="https://img.shields.io/badge/Status-Conclu%C3%ADdo-brightgreen?style=for-the-badge" alt="Status">
   <img src="https://img.shields.io/badge/Ambiente-Acad%C3%Aamico-orange?style=for-the-badge" alt="Ambiente">
   <img src="https://img.shields.io/badge/Conformidade-LGPD-green?style=for-the-badge" alt="LGPD">
 </p>
@@ -132,6 +132,7 @@ erDiagram
         string nome
         string emailInstitucional
         string telefone
+        string senha
         enum tipoUsuario
         int id_curso FK
     }
@@ -266,21 +267,144 @@ classDiagram
     Certificado "1" -- "1" InscricaoSubEvento : gera
 ```
 ---
+
 ## 🛠️ Como Executar o Projeto Localmente
 
-1. **Pré-requisitos:** Certifique-se de possuir o Java 21 e o Maven instalados em sua máquina.
-2. **Clonar o Repositório:**
+**Pré-requisitos:** Java 21 e Maven instalados.
+
+1. **Clonar o repositório:**
    ```bash
-   git clone [https://github.com/seu-usuario/p1Eventos.git](https://github.com/seu-usuario/p1Eventos.git)
+   git clone https://github.com/ziulalb/p1Eventos.git
    cd p1Eventos
+   ```
+
+2. **Executar a aplicação:**
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+   O banco H2 em memória é criado e populado automaticamente na inicialização.
+
+3. **Acessar a documentação Swagger:**
+   ```
+   http://localhost:8080/swagger-ui.html
+   ```
+
+4. **Acessar o console H2 (banco de dados):**
+   ```
+   http://localhost:8080/h2-console
+   JDBC URL: jdbc:h2:mem:p1eventos
+   Usuário: sa  |  Senha: (em branco)
+   ```
 
 ---
+
+## 🔐 Usuários de Teste (gerados automaticamente)
+
+| Matrícula | Senha | Perfil |
+|-----------|-------|--------|
+| `ADM001` | `admin123` | ADMIN |
+| `DOC001` | `docente123` | DOCENTE |
+| `DIS001` | `discente123` | DISCENTE |
+
+---
+
 ## 📋 Exemplos de Execução da API
 
-### 1. Autenticação (POST `/api/auth/login`)
-**Payload de Requisição:**
+### 1. Autenticação — `POST /api/auth/login`
+
+**Requisição:**
 ```json
 {
   "matricula": "ADM001",
-  "senha": "123"
+  "senha": "admin123"
 }
+```
+
+**Resposta (`200 OK`):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBRE0wMDEiLCJyb2xlcyI..."
+}
+```
+
+---
+
+### 2. Usando o token nas demais rotas
+
+Inclua o token no header `Authorization` de todas as requisições protegidas:
+
+```
+Authorization: Bearer <token_retornado_no_login>
+```
+
+---
+
+### 3. Listar eventos — `GET /api/eventos` *(requer autenticação)*
+
+**Header:**
+```
+Authorization: Bearer <token>
+```
+
+**Resposta (`200 OK`):**
+```json
+[
+  {
+    "id": 1,
+    "titulo": "Semana de Tecnologia IFS 2025",
+    "resumo": "Evento anual de tecnologia com palestras, workshops e hackathon.",
+    "dataInicio": "2025-10-13T08:00:00",
+    "dataFim": "2025-10-17T18:00:00",
+    "capacidadeMaxima": 300
+  }
+]
+```
+
+---
+
+### 4. Listar subeventos de um evento — `GET /api/eventos/{id}/subeventos` *(multitabela)*
+
+**Exemplo:** `GET /api/eventos/1/subeventos`
+
+**Resposta (`200 OK`):**
+```json
+[
+  {
+    "id": 1,
+    "titulo": "Palestra: IA na Educação",
+    "dataInicio": "2025-10-13T09:00:00",
+    "dataFim": "2025-10-13T11:00:00",
+    "valor": 0.00,
+    "capacidadeMaxima": 200
+  },
+  {
+    "id": 2,
+    "titulo": "Workshop: Spring Boot com JPA",
+    "dataInicio": "2025-10-14T14:00:00",
+    "dataFim": "2025-10-14T17:00:00",
+    "valor": 50.00,
+    "capacidadeMaxima": 30
+  }
+]
+```
+
+---
+
+### 5. Criar curso — `POST /api/cursos` *(requer ADMIN)*
+
+**Requisição:**
+```json
+{
+  "nomeCurso": "Sistemas de Informação",
+  "departamento": "Tecnologia da Informação"
+}
+```
+
+**Resposta (`201 Created`):**
+```json
+{
+  "id": 3,
+  "nomeCurso": "Sistemas de Informação",
+  "departamento": "Tecnologia da Informação"
+}
+```
