@@ -265,3 +265,11 @@ classDiagram
 
     Certificado "1" -- "1" InscricaoSubEvento : gera
 ```
+---
+## 🛠️ Como Executar o Projeto Localmente
+
+1. **Pré-requisitos:** Certifique-se de possuir o Java 21 e o Maven instalados em sua máquina.
+2. **Clonar o Repositório:**
+   ```bash
+   git clone [https://github.com/seu-usuario/p1Eventos.git](https://github.com/seu-usuario/p1Eventos.git)
+   cd p1Eventos
