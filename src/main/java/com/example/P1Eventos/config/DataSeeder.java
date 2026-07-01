@@ -4,6 +4,7 @@ import com.example.P1Eventos.entities.*;
 import com.example.P1Eventos.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ public class DataSeeder implements CommandLineRunner {
     private final SubeventoRepository subeventoRepo;
     private final CertificadoRepository certificadoRepo;
     private final PerfilRepository perfilRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
@@ -41,11 +43,17 @@ public class DataSeeder implements CommandLineRunner {
                 .departamento("Engenharia")
                 .build());
 
+        String senhaAdmin    = passwordEncoder.encode("admin123");
+        String senhaDocente  = passwordEncoder.encode("docente123");
+        String senhaDiscente = passwordEncoder.encode("discente123");
+
         // --- Usuários Vinculados com Cursos e seus Respectivos Perfis (M:N) ---
         usuarioRepo.save(Usuario.builder()
                 .matricula("20231FLN001")
                 .nome("Lorena")
                 .emailInstitucional("lorena@ifs.edu.br")
+                .senha(senhaDocente)
+                .tipoUsuario(TipoUsuario.DOCENTE)
                 .perfis(Set.of(adminPerfil, docentePerfil))
                 .curso(ads)
                 .build());
@@ -54,6 +62,8 @@ public class DataSeeder implements CommandLineRunner {
                 .matricula("20231FLN002")
                 .nome("Luiz")
                 .emailInstitucional("luiz@ifs.edu.br")
+                .senha(senhaDiscente)
+                .tipoUsuario(TipoUsuario.DISCENTE)
                 .perfis(Set.of(discentePerfil))
                 .curso(ads)
                 .build());
@@ -63,6 +73,7 @@ public class DataSeeder implements CommandLineRunner {
                 .nome("Carlos Administrador")
                 .emailInstitucional("carlos.admin@ifs.edu.br")
                 .telefone("(79) 99999-0001")
+                .senha(senhaAdmin)
                 .tipoUsuario(TipoUsuario.ADMIN)
                 .perfis(Set.of(adminPerfil))
                 .curso(ads)
@@ -73,6 +84,7 @@ public class DataSeeder implements CommandLineRunner {
                 .nome("Professora Ana Lima")
                 .emailInstitucional("ana.lima@ifs.edu.br")
                 .telefone("(79) 99999-0002")
+                .senha(senhaDocente)
                 .tipoUsuario(TipoUsuario.DOCENTE)
                 .perfis(Set.of(docentePerfil))
                 .curso(ads)
@@ -83,6 +95,7 @@ public class DataSeeder implements CommandLineRunner {
                 .nome("Professor João Santos")
                 .emailInstitucional("joao.santos@ifs.edu.br")
                 .telefone("(79) 99999-0003")
+                .senha(senhaDocente)
                 .tipoUsuario(TipoUsuario.DOCENTE)
                 .perfis(Set.of(docentePerfil))
                 .curso(civil)
@@ -92,6 +105,7 @@ public class DataSeeder implements CommandLineRunner {
                 .matricula("DIS001")
                 .nome("Maria Oliveira")
                 .emailInstitucional("maria.oliveira@academico.ifs.edu.br")
+                .senha(senhaDiscente)
                 .tipoUsuario(TipoUsuario.DISCENTE)
                 .perfis(Set.of(discentePerfil))
                 .curso(ads)
@@ -101,6 +115,7 @@ public class DataSeeder implements CommandLineRunner {
                 .matricula("DIS002")
                 .nome("Pedro Costa")
                 .emailInstitucional("pedro.costa@academico.ifs.edu.br")
+                .senha(senhaDiscente)
                 .tipoUsuario(TipoUsuario.DISCENTE)
                 .perfis(Set.of(discentePerfil))
                 .curso(ads)
@@ -110,6 +125,7 @@ public class DataSeeder implements CommandLineRunner {
                 .matricula("DIS003")
                 .nome("Fernanda Silva")
                 .emailInstitucional("fernanda.silva@academico.ifs.edu.br")
+                .senha(senhaDiscente)
                 .tipoUsuario(TipoUsuario.DISCENTE)
                 .perfis(Set.of(discentePerfil))
                 .curso(civil)

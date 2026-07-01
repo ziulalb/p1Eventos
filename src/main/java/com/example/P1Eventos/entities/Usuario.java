@@ -34,8 +34,12 @@ public class Usuario {
     @Column(length = 20)
     private String telefone;
 
+    @JsonIgnore
+    @Column(length = 255)
+    private String senha;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private TipoUsuario tipoUsuario;
 
     @ManyToOne

@@ -49,9 +49,9 @@ public class LocalController {
     public ResponseEntity<Local> atualizar(@PathVariable @Positive Long id, @RequestBody @Valid Local localAtualizado) {
         return localRepository.findById(id)
                 .map(local -> {
-                    local.Nome(localAtualizado.getNome());
-                    // Dependendo de como o método setter foi gerado no seu código do Lombok (como padrão fluente ou padrão padrão):
-                    // Se der erro de compilação em .Nome(), mude para: local.setNome(localAtualizado.getNome());
+                    local.setNomeSala(localAtualizado.getNomeSala());
+                    local.setBloco(localAtualizado.getBloco());
+                    local.setCapacidadeReal(localAtualizado.getCapacidadeReal());
                     Local salvo = localRepository.save(local);
                     return ResponseEntity.ok(salvo);
                 })

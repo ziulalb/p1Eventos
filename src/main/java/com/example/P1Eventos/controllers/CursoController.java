@@ -49,8 +49,8 @@ public class CursoController {
     public ResponseEntity<Curso> atualizar(@PathVariable @Positive Long id, @RequestBody @Valid Curso cursoAtualizado) {
         return cursoRepository.findById(id)
                 .map(curso -> {
-                    curso.setNome(cursoAtualizado.getNome());
-                    // Adicione outros campos da entidade Curso se houver, ex: curso.setSigla(...);
+                    curso.setNomeCurso(cursoAtualizado.getNomeCurso());
+                    curso.setDepartamento(cursoAtualizado.getDepartamento());
                     Curso salvo = cursoRepository.save(curso);
                     return ResponseEntity.ok(salvo);
                 })
