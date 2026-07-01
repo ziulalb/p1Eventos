@@ -1,5 +1,6 @@
 package com.example.P1Eventos.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,10 +26,12 @@ public class Curso {
     @Column(nullable = false, length = 100)
     private String departamento;
 
+    @JsonIgnore
     @Builder.Default
     @OneToMany(mappedBy = "curso")
     private List<Usuario> usuarios = new ArrayList<>();
 
+    @JsonIgnore
     @Builder.Default
     @OneToMany(mappedBy = "curso")
     private List<Local> locais = new ArrayList<>();

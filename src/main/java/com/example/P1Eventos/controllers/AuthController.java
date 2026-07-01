@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,13 @@ public class AuthController {
         description = "Autentica o usuário com matrícula e senha, retornando um token JWT válido por 24 horas"
     )
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
-        var credentials = new UsernamePasswordAuthenticationToken(dto.matricula(), dto.senha());
-        authenticationManager.authenticate(credentials);
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.matricula(), dto.senha())
+            );
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         var usuario = usuarioRepository.findByMatricula(dto.matricula()).orElseThrow();
         String token = tokenService.gerarToken(usuario);

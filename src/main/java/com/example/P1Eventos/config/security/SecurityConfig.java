@@ -36,7 +36,8 @@ public class SecurityConfig {
                         // 1. Libera rotas públicas de Autenticação e H2 Console
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        
+                        .requestMatchers("/error").permitAll()
+
                         // 2. Libera as rotas de documentação do Swagger/OpenAPI
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 

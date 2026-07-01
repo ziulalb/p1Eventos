@@ -3,6 +3,7 @@ package com.example.P1Eventos.controllers;
 import com.example.P1Eventos.entities.Evento;
 import com.example.P1Eventos.entities.Subevento;
 import com.example.P1Eventos.repositories.EventoRepository;
+import com.example.P1Eventos.repositories.SubeventoRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
@@ -21,6 +22,7 @@ import java.util.List;
 public class EventoController {
 
     private final EventoRepository eventoRepository;
+    private final SubeventoRepository subeventoRepository;
 
     @GetMapping
     @Operation(summary = "Listar todos os eventos", description = "Retorna todos os eventos cadastrados no sistema")
@@ -36,8 +38,9 @@ public class EventoController {
     public ResponseEntity<List<Subevento>> listarSubeventosDoEvento(
             @PathVariable @Positive(message = "O ID do evento deve ser um número positivo.") Long id) {
 
-        return eventoRepository.findById(id)
-                .map(evento -> ResponseEntity.ok(evento.getSubeventos()))
-                .orElse(ResponseEntity.notFound().build());
+        if (!eventoRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(subeventoRepository.findByEventoId(id));
     }
 }
