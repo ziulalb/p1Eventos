@@ -4,12 +4,13 @@ import com.example.P1Eventos.entities.*;
 import com.example.P1Eventos.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
-@Configuration
+@Component
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
 
@@ -19,9 +20,15 @@ public class DataSeeder implements CommandLineRunner {
     private final EventoRepository eventoRepo;
     private final SubeventoRepository subeventoRepo;
     private final CertificadoRepository certificadoRepo;
+    private final PerfilRepository perfilRepository;
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws Exception {
+
+        // 1. Criar e Salvar os Perfis de Acesso (Exigência do Spring Security)
+        Perfil adminPerfil = perfilRepository.save(Perfil.builder().nome("ROLE_ADMIN").build());
+        Perfil docentePerfil = perfilRepository.save(Perfil.builder().nome("ROLE_DOCENTE").build());
+        Perfil discentePerfil = perfilRepository.save(Perfil.builder().nome("ROLE_DISCENTE").build());
 
         // --- Cursos ---
         Curso ads = cursoRepo.save(Curso.builder()
@@ -34,13 +41,30 @@ public class DataSeeder implements CommandLineRunner {
                 .departamento("Engenharia")
                 .build());
 
-        // --- Usuários ---
+        // --- Usuários Vinculados com Cursos e seus Respectivos Perfis (M:N) ---
+        usuarioRepo.save(Usuario.builder()
+                .matricula("20231FLN001")
+                .nome("Lorena")
+                .emailInstitucional("lorena@ifs.edu.br")
+                .perfis(Set.of(adminPerfil, docentePerfil))
+                .curso(ads)
+                .build());
+
+        usuarioRepo.save(Usuario.builder()
+                .matricula("20231FLN002")
+                .nome("Luiz")
+                .emailInstitucional("luiz@ifs.edu.br")
+                .perfis(Set.of(discentePerfil))
+                .curso(ads)
+                .build());
+
         usuarioRepo.save(Usuario.builder()
                 .matricula("ADM001")
                 .nome("Carlos Administrador")
                 .emailInstitucional("carlos.admin@ifs.edu.br")
                 .telefone("(79) 99999-0001")
                 .tipoUsuario(TipoUsuario.ADMIN)
+                .perfis(Set.of(adminPerfil))
                 .curso(ads)
                 .build());
 
@@ -50,6 +74,7 @@ public class DataSeeder implements CommandLineRunner {
                 .emailInstitucional("ana.lima@ifs.edu.br")
                 .telefone("(79) 99999-0002")
                 .tipoUsuario(TipoUsuario.DOCENTE)
+                .perfis(Set.of(docentePerfil))
                 .curso(ads)
                 .build());
 
@@ -59,6 +84,7 @@ public class DataSeeder implements CommandLineRunner {
                 .emailInstitucional("joao.santos@ifs.edu.br")
                 .telefone("(79) 99999-0003")
                 .tipoUsuario(TipoUsuario.DOCENTE)
+                .perfis(Set.of(docentePerfil))
                 .curso(civil)
                 .build());
 
@@ -67,6 +93,7 @@ public class DataSeeder implements CommandLineRunner {
                 .nome("Maria Oliveira")
                 .emailInstitucional("maria.oliveira@academico.ifs.edu.br")
                 .tipoUsuario(TipoUsuario.DISCENTE)
+                .perfis(Set.of(discentePerfil))
                 .curso(ads)
                 .build());
 
@@ -75,6 +102,7 @@ public class DataSeeder implements CommandLineRunner {
                 .nome("Pedro Costa")
                 .emailInstitucional("pedro.costa@academico.ifs.edu.br")
                 .tipoUsuario(TipoUsuario.DISCENTE)
+                .perfis(Set.of(discentePerfil))
                 .curso(ads)
                 .build());
 
@@ -83,6 +111,7 @@ public class DataSeeder implements CommandLineRunner {
                 .nome("Fernanda Silva")
                 .emailInstitucional("fernanda.silva@academico.ifs.edu.br")
                 .tipoUsuario(TipoUsuario.DISCENTE)
+                .perfis(Set.of(discentePerfil))
                 .curso(civil)
                 .build());
 
@@ -172,7 +201,7 @@ public class DataSeeder implements CommandLineRunner {
                 .local(salaConferencias)
                 .build());
 
-        // --- Inscrições em Eventos (N:N via inscricoes_evento) ---
+        // --- Inscrições em Eventos (N:N via coleções gerenciadas pelo JPA) ---
         discente1.getEventosInscritos().add(semanaInfo);
         discente1.getEventosInscritos().add(semanaEng);
         discente1.getSubeventosInscritos().add(palestra1);
@@ -224,12 +253,13 @@ public class DataSeeder implements CommandLineRunner {
                 .build());
 
         System.out.println("\n=== Seeding concluído com sucesso! ===");
-        System.out.println("Cursos:      " + cursoRepo.count());
-        System.out.println("Usuários:    " + usuarioRepo.count());
-        System.out.println("Locais:      " + localRepo.count());
-        System.out.println("Eventos:     " + eventoRepo.count());
-        System.out.println("Subeventos:  " + subeventoRepo.count());
-        System.out.println("Certificados:" + certificadoRepo.count());
+        System.out.println("Perfis:       " + perfilRepository.count());
+        System.out.println("Cursos:       " + cursoRepo.count());
+        System.out.println("Usuários:     " + usuarioRepo.count());
+        System.out.println("Locais:       " + localRepo.count());
+        System.out.println("Eventos:      " + eventoRepo.count());
+        System.out.println("Subeventos:   " + subeventoRepo.count());
+        System.out.println("Certificados: " + certificadoRepo.count());
         System.out.println("H2 Console → http://localhost:8080/h2-console");
         System.out.println("  JDBC URL: jdbc:h2:mem:p1eventos\n");
     }
