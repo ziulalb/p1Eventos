@@ -38,6 +38,7 @@ public class Local {
     @Column(nullable = false)
     private Integer capacidadeReal;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToOne
     @JoinColumn(name = "id_curso")
     private Curso curso;
