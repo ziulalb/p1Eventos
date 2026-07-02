@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/subeventos/**").hasAnyRole("DOCENTE", "ADMIN")
                         
                         // DISCENTE pode visualizar eventos e se inscrever
-                        .requestMatchers(HttpMethod.GET, "/api/eventos/**").hasAnyRole("DISCENTE", "DOCENTE", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/eventos", "/api/eventos/**").hasAnyRole("DISCENTE", "DOCENTE", "ADMIN")
                         .requestMatchers("/api/inscricoes/**").hasRole("DISCENTE")
 
                         // Qualquer outra requisição precisa estar autenticada
